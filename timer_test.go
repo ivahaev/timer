@@ -25,6 +25,21 @@ func TestStop(t *testing.T) {
 	time.Sleep(time.Second * 2)
 }
 
+func TestIdleStop(t *testing.T) {
+	var timer = AfterFunc(time.Second, func() {
+		t.Fatal("Stopping is not working")
+	})
+	timer.Start()
+	timer.Stop()
+	if timer.Stop() {
+		t.Fatal("Invalid timer state")
+	}
+	if timer.Pause() {
+		t.Fatal("Invalid timer state")
+	}
+	time.Sleep(time.Second * 2)
+}
+
 func TestPause(t *testing.T) {
 	var now = time.Now()
 	var timer = AfterFunc(time.Second, func() {
