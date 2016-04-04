@@ -12,7 +12,8 @@ const (
 // the current time will be sent on C, unless the Timer was created by AfterFunc.
 // A Timer must be created with NewTimer or AfterFunc.
 type Timer struct {
-	C         chan time.Time
+	C         <-chan time.Time
+	c         chan time.Time
 	duration  time.Duration
 	state     int
 	fn        func()
@@ -41,10 +42,11 @@ func NewTimer(d time.Duration) *Timer {
 	c := make(chan time.Time, 1)
 	t := new(Timer)
 	t.C = c
+	t.c = c
 	t.duration = d
 	t.fn = func() {
 		t.state = stateExpired
-		t.C <- time.Now()
+		t.c <- time.Now()
 	}
 	return t
 }
