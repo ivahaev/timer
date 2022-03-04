@@ -2,8 +2,10 @@ package timer
 
 import "time"
 
+type State int
+
 const (
-	stateIdle = iota
+	stateIdle State = iota
 	stateActive
 	stateExpired
 )
@@ -15,7 +17,7 @@ type Timer struct {
 	C         <-chan time.Time
 	c         chan time.Time
 	duration  time.Duration
-	state     int
+	state     State
 	fn        func()
 	startedAt time.Time
 	t         *time.Timer
@@ -62,7 +64,7 @@ func (t *Timer) Pause() bool {
 		return false
 	}
 	t.state = stateIdle
-	dur := time.Now().Sub(t.startedAt)
+	dur := time.Since(t.startedAt)
 	t.duration = t.duration - dur
 	return true
 }
